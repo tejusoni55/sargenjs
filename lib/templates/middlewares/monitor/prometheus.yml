@@ -1,0 +1,11 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: "<%= projectName %>"
+    static_configs:
+      - targets: ["<YOUR_LOCALHOST_IP>:<YOUR_PORT>"]
+
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["prometheus:9090"]

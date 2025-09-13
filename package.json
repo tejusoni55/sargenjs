@@ -1,0 +1,61 @@
+{
+  "name": "sargenjs",
+  "version": "1.0.0",
+  "description": "A CLI tool for generating Express.js project boilerplates with different architectural patterns",
+  "main": "./lib/index.js",
+  "bin": {
+    "sargen": "./bin/index.js"
+  },
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config ./tests/jest.config.js",
+    "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config ./tests/jest.config.js --watch",
+    "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config ./tests/jest.config.js --coverage",
+    "prepublishOnly": "npm test"
+  },
+  "keywords": [
+    "express",
+    "nodejs",
+    "cli",
+    "boilerplate",
+    "generator",
+    "mvc",
+    "modular",
+    "sequelize",
+    "mysql",
+    "postgresql",
+    "git",
+    "github"
+  ],
+  "author": "Your Name <your.email@example.com>",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/sargenjs.git"
+  },
+  "homepage": "https://github.com/yourusername/sargenjs#readme",
+  "bugs": {
+    "url": "https://github.com/yourusername/sargenjs/issues"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "files": [
+    "lib/",
+    "bin/",
+    "logo/",
+    "README.md",
+    "LICENSE"
+  ],
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "commander": "^14.0.0",
+    "dotenv": "^16.4.5",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "memfs": "^4.7.7",
+    "mock-fs": "^5.2.0"
+  }
+} 

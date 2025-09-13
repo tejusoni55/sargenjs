@@ -1,0 +1,22 @@
+{
+  "roles": {
+    "admin": {
+      "resources": {
+        "users": ["create", "read", "update", "delete"],
+        "files": ["create", "read", "update", "delete"]
+      }
+    },
+    "editor": {
+      "resources": {
+        "users": ["read"],
+        "files": ["create", "read", "update"]
+      }
+    },
+    "viewer": {
+      "resources": {
+        "users": ["read"],
+        "files": ["read"]
+      }
+    }
+  }
+}
