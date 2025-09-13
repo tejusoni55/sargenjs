@@ -1,7 +1,7 @@
 {
   "name": "sargenjs",
   "version": "1.0.0",
-  "description": "A CLI tool for generating Express.js project boilerplates with different architectural patterns",
+  "description": "A powerful CLI tool for generating Express.js project boilerplates with middleware, utilities, and database setup",
   "main": "./lib/index.js",
   "bin": {
     "sargen": "./bin/index.js"
@@ -15,27 +15,21 @@
   },
   "keywords": [
     "express",
-    "nodejs",
     "cli",
     "boilerplate",
     "generator",
-    "mvc",
-    "modular",
-    "sequelize",
-    "mysql",
-    "postgresql",
-    "git",
-    "github"
+    "sargen",
+    "sargenjs"
   ],
-  "author": "Your Name <your.email@example.com>",
+  "author": "Tejas Soni <tejusoniop@gmail.com>",
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/sargenjs.git"
+    "url": "https://github.com/tejusoni55/sargenjs.git"
   },
-  "homepage": "https://github.com/yourusername/sargenjs#readme",
+  "homepage": "https://sargenjs-docs.vercel.app",
   "bugs": {
-    "url": "https://github.com/yourusername/sargenjs/issues"
+    "url": "https://github.com/tejusoni55/sargenjs/issues"
   },
   "engines": {
     "node": ">=14.0.0"
