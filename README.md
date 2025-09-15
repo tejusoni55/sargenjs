@@ -1,7 +1,7 @@
 # SargenJS
 
-<div align="center" style="padding: 20px 0">
-  <img src="logo/sargenjs-logo.png" alt="SargenJS Logo" width="200">
+<div align="center" >
+  <img src="logo/sargenjs-logo.png" alt="SargenJS Logo" width="200" style="margin: 10px 0">
 </div>
 
 🚀 **SargenJS** - A beginner-friendly CLI that builds a ready-to-use Express.js project. Just run the command to get routes, configs, and scripts so you can focus on writing features, not boilerplate & base configurations.
@@ -98,6 +98,21 @@ sargen init test-project --db
 cd test-project
 npm run dev
 ```
+
+OR
+
+```bash
+# test|satging environment
+npm run test
+```
+
+OR
+
+```bash
+# production environment
+npm run prod
+```
+
 Your node.js app will be started on: http://localhost:8000
 
 ## Project Structures
@@ -112,6 +127,8 @@ test-project/
 │   └── services/
 ├── app.js
 ├── .env
+├── .env.test
+├── .env.production
 └── package.json
 ```
 
@@ -124,6 +141,8 @@ test-project/
 │   └── modules/
 ├── app.js
 ├── .env
+├── .env.test
+├── .env.production
 └── package.json
 ```
 
@@ -140,6 +159,11 @@ test-project/
 
 ### Sargen Setup (Existing project)
 - `sargen setup` - Configure `.sargen.json` file in an existing Express.js project to use sargen commands
+  - **Validates** that you're in a proper Express.js project directory
+    - Checks for `package.json` with valid structure
+    - Ensures Express.js is installed as a dependency
+    - Warns about missing recommended dependencies (dotenv, body-parser, helmet, cors)
+    - Checks for standard Express.js project structure (app.js, server.js, or index.js)
   - Detects project structure (layered or modular)
   - Creates sargen.json configuration file
   - Enables use of other sargen commands in the project
@@ -372,6 +396,137 @@ DB_HOST=localhost
 DB_PORT=3306
 DB_DIALECT=mysql
 ```
+
+**CORS Configuration:**
+```
+ALLOWED_ORIGINS=["http://localhost:3000","https://yourdomain.com"]
+```
+
+## Environment Management
+
+SargenJS automatically creates multiple environment files for different deployment scenarios:
+
+### Environment Files Created:
+- `.env` - Development environment (default)
+- `.env.test` - Test environment
+- `.env.production` - Production environment
+
+### Available Scripts:
+```bash
+# Development mode (default)
+npm run dev
+
+# Test environment
+npm run test
+
+# Production environment
+npm run prod
+```
+
+> **💡 Cross-Platform Support:** All scripts use `cross-env` for seamless environment variable handling across Windows, macOS, and Linux.
+
+### Environment Switching:
+The application automatically loads the appropriate environment file based on the `NODE_ENV` variable:
+
+- **Development**: Uses `.env` file (NODE_ENV=development)
+- **Test**: Uses `.env.test` file (NODE_ENV=test)
+- **Production**: Uses `.env.production` file (NODE_ENV=production)
+
+### Customizing Environment Files:
+You can modify the environment files to include environment-specific configurations:
+
+**`.env` (Development):**
+```
+NODE_ENV=development
+PORT=8000
+DB_HOST=localhost
+DB_NAME=myapp_dev
+```
+
+**`.env.test` (Test):**
+```
+NODE_ENV=test
+PORT=8000
+DB_HOST=localhost
+DB_NAME=myapp_test
+```
+
+**`.env.production` (Production):**
+```
+NODE_ENV=production
+PORT=8000
+DB_HOST=prod-db.example.com
+DB_NAME=myapp_prod
+```
+
+### Manual Environment Switching:
+You can also manually set the environment:
+
+```bash
+# Set environment variable and run
+NODE_ENV=production node app.js
+
+# Or use cross-env for cross-platform compatibility
+npx cross-env NODE_ENV=production node app.js
+```
+
+## CORS Management
+
+SargenJS includes dynamic CORS configuration that allows you to manage allowed origins through environment variables.
+
+### Default Behavior:
+- **Development**: Allows all origins (`*`)
+- **Test**: Allows localhost origins for testing
+- **Production**: Requires explicit domain configuration
+
+### Managing CORS Origins:
+
+#### **Environment-Based Configuration:**
+```bash
+# Allow specific domains and IPs (JSON array format)
+ALLOWED_ORIGINS=["https://yourdomain.com","https://www.yourdomain.com","https://api.yourdomain.com"]
+
+# Allow all origins (development only)
+ALLOWED_ORIGINS=["*"]
+
+# Allow localhost and specific IPs for testing
+ALLOWED_ORIGINS=["http://localhost:3000","http://localhost:3001","192.168.1.100"]
+```
+
+#### **Environment-Specific Examples:**
+
+**`.env` (Development):**
+```
+ALLOWED_ORIGINS=["*"]
+```
+
+**`.env.test` (Test):**
+```
+ALLOWED_ORIGINS=["http://localhost:3000","http://localhost:3001"]
+```
+
+**`.env.production` (Production):**
+```
+ALLOWED_ORIGINS=["https://yourdomain.com","https://www.yourdomain.com"]
+```
+
+### CORS Features:
+- ✅ **Dynamic origin validation** based on environment variables
+- ✅ **IP and domain support** - Allow both IP addresses and domains
+- ✅ **JSON array format** - Simple and flexible configuration
+- ✅ **Environment-specific defaults** (permissive in dev, restrictive in prod)
+- ✅ **Security-first approach** - Requires origin validation in production/test
+- ✅ **Credentials support** for authenticated requests
+- ✅ **Standard HTTP methods** (GET, POST, PUT, DELETE, PATCH, OPTIONS)
+- ✅ **Common headers** (Content-Type, Authorization, X-Requested-With)
+
+### Security Best Practices:
+1. **Never use `*` in production** - Always specify exact domains
+2. **Use HTTPS in production** - Ensure secure connections
+3. **Regularly review allowed origins** - Remove unused domains
+4. **Test CORS configuration** - Verify cross-origin requests work as expected
+5. **Origin validation required** - Production/test environments require valid origins
+6. **Block direct API access** - Prevents unauthorized curl/mobile app requests
 
 ## License
 

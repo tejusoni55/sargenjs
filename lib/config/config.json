@@ -1,6 +1,6 @@
 {
   "dependencies": ["express", "dotenv", "body-parser", "helmet", "cors"],
-  "devDependencies": [],
+  "devDependencies": ["cross-env"],
   "initialDirsFiles": {
     "layered": [
       { 
@@ -48,7 +48,9 @@
     }
   },
   "scripts": {
-    "dev": "node app.js"
+    "dev": "node app.js",
+    "test": "cross-env NODE_ENV=test node app.js",
+    "prod": "cross-env NODE_ENV=production node app.js"
   },
   "sargenMetadata": {
     "layered": {
