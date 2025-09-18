@@ -87,10 +87,6 @@ Create a project with additional security middleware `rateLimit`
 sargen init test-project --security rateLimit
 ```
 
-Create a project with **default** database configuration (`sequelize` & `mysql`)
-```bash
-sargen init test-project --db
-```
 
 ### Run the project
 
@@ -153,7 +149,6 @@ test-project/
   - Options:
     - `--struct <type>` - Project structure type (`layered` or `modular`)
     - `--test` - Add test routing file to demonstrate project structure and API handling patterns
-    - `--db` - Flag to setup database configuration (**sequelize** and **mysql** by default)
     - `--security [security...]` - Setup security middlewares (`helmet`, `cors`, `rateLimit`)
     - `-v, --verbose` - Enable verbose logging to see detailed background processes
 
@@ -176,37 +171,95 @@ test-project/
   - Options:
     -  `--orm <name>` - Database ORM to be setup (Supports only `sequelize` for now, `typeORM` in future updates)
     - `--adapter <name>` - Database connection/adapter to be setup (Supports `mysql` and `postgres` for now, `mongo` in future updates)
+    - `--docker` - Set up database with Docker Compose configuration (creates local database containers)
     - `-v, --verbose` - Enable verbose logging to see detailed background processes
+
+#### Database Docker Setup:
+When using the `--docker` option, SargenJS creates a complete Docker-based database setup:
+
+**Features:**
+- **Local Database Containers**: MySQL 8.0 or PostgreSQL 15 with optimized configurations
+- **Automatic Password Generation**: Secure random passwords for database access
+- **Environment Variables**: Database credentials configured in Docker Compose
+- **Health Checks**: Built-in health monitoring for database containers
+- **Data Persistence**: Database data stored in `docker/data/` directories
+- **Custom Configuration**: Database-specific config files for development optimization
+
+**Usage Examples:**
+```bash
+# Setup MySQL with Docker (Default)
+sargen gen:db --docker
+
+# Setup PostgreSQL with Docker  
+sargen gen:db --docker --adapter postgres
+
+# Start database containers
+docker-compose -f docker/docker-compose.yml up -d
+
+# Check database logs
+docker-compose -f docker/docker-compose.yml logs mysql
+docker-compose -f docker/docker-compose.yml logs postgres
+```
+
+**Generated Files:**
+- `docker/docker-compose.yml` - Main Docker Compose configuration
+- `docker/data/` - Database data persistence directories
 
 
 ### Module Generation
 - `sargen gen:module <module-name>` - Generate a new module/feature with all necessary files
-  - Options:
-    - `--crud` - Flag to generate Create,Read,Update,Delete APIs along with module
-      - **C**reate: `POST /api/v1/<module>`
-      - **R**ead: `GET /api/v1/<module>`
-      - **U**pdate: `PUT /api/v1/<module>/:id`
-      - **D**elete: `DELETE /api/v1/<module>/:id`
-    - `--no-model` - Skip model generation (only create controller, route, service)
-    - `--model-attributes <attributes>` - Define model attributes (format: name:string,email:string,phone:number)
-      - **Supported types:** string, number, integer, bool/boolean, float, date
-      - **Type mapping:** number→BIGINT, integer→INTEGER, string→STRING, bool/boolean→BOOLEAN, float→FLOAT, date→DATE
-      - **Example:** `--model-attributes name:string,email:string,phone:number,is_verified:bool,last_login:date`
-    - `-v, --verbose` - Enable verbose logging to see detailed background processes
-        
-  - Creates controller, route, service, and model files (unless --no-model is used)
-  - **Controller methods automatically call corresponding service methods**
+
+**Three Use Cases:**
+
+**1. Basic Module Setup:**
+```bash
+sargen gen:module users
+```
+- Creates blank controller, routes, service, and model files
+- User can customize files as per their requirements
+
+**2. Module with CRUD Methods:**
+```bash
+sargen gen:module users --crud
+```
+- Creates basic module files with blank CRUD methods
+- Generates RESTful endpoints: `POST /api/v1/users`, `GET /api/v1/users`, `PUT /api/v1/users/:id`, `DELETE /api/v1/users/:id`
+- User needs to manually update migration and model files for database integration
+
+**3. Complete CRUD with Database Integration:**
+```bash
+sargen gen:module users --crud --model-attributes name:string,age:number,email:string
+```
+- Creates fully functional CRUD with dynamic queries and model attributes
+- **Automatically includes pagination service** for GET operations
+- Populates migration files with defined attributes
+- Just run `npx sequelize-cli db:migrate` and CRUD is ready to use
+
+**Options:**
+- `--crud` - Generate Create, Read, Update, Delete APIs
+- `--no-model` - Skip model generation (only create controller, route, service)
+- `--model-attributes <attributes>` - Define model attributes (format: name:string,email:string,phone:number)
+  - **Supported types:** string, number, integer, bool/boolean, float, date
+  - **Type mapping:** number→BIGINT, integer→INTEGER, string→STRING, bool/boolean→BOOLEAN, float→FLOAT, date→DATE
+  - **Example:** `--model-attributes name:string,email:string,phone:number,is_verified:bool,last_login:date`
+- `-v, --verbose` - Enable verbose logging to see detailed background processes
   - **Service methods accept parameters (data, id, query) for proper functionality**
   - Follows project structure (layered or modular)
   - Automatically populates migration files with defined attributes
   - For layered: Creates files in respective directories
   - For modular: Creates module directory with complete structure
+
+**Pagination Service:**
+When using `--crud` and `--model-attributes`, SargenJS automatically creates a pagination service for GET operations.
+- **Query Parameters**: `page` and `limit` (e.g., `GET /api/v1/users?page=1&limit=10`)
+- **Response**: Includes `totalCounts`, `totalPages`, `currentPage`, `pageLimit`, and `items` array
+- **Environment Variables**: Configurable via `PER_PAGE` and `DEFAULT_PAGE` env vars
 [!NOTE]: For consitency keep module name in `plural` form or closed to `table-name`, (.i.e users, orders, products, payments etc.)
 
 
 ### Middleware Setup
 - `sargen gen:middleware <name>` - Setup up predefined middleware code files into project
-  - Available middlewares: `auth` | `acl` | `monitor`
+  - Available middlewares: `validator` | `auth` | `acl` | `monitor`
   - Sets middleware file at,
     - **Layered** structure: `src/middlewares`
     - **Modular** structure: `src/common/middlewares`
@@ -214,6 +267,11 @@ test-project/
     - `-v, --verbose` - Enable verbose logging to see detailed background processes
 
 #### Available Middlewares:
+
+**Validation Middleware (`validator`)**
+- Generates centralized validation service using `fastest-validator`
+- Auto-discovers DTO files from `src/dto` (layered) or `src/common/dto` (modular)
+- Dependencies: `fastest-validator`
 
 **Authentication Middleware (`auth`)**
 - Generates JWT-based authentication system
@@ -227,10 +285,11 @@ test-project/
 
 **Monitoring Middleware (`monitor`)**
 - Generates comprehensive monitoring setup with **Prometheus**, **Grafana**, and **Loki**
-- Creates monitoring middleware and Docker Compose configuration in `__monitorConfig` directory
+- Creates monitoring middleware and centralized Docker Compose configuration
 - Dependencies: `prom-client`, `winston`, `winston-loki`, `response-time`
 - Includes Grafana dashboard at `http://localhost:3000`
-- Docker Compose files located in `src/middlewares/__monitorConfig/` (or `src/common/middlewares/__monitorConfig/`)
+- Docker Compose files located in `docker/` directory (centralized structure)
+- **Usage**: `sargen gen:middleware monitor` → `docker-compose -f docker/docker-compose.yml up -d`
 
 ### Utility Services
 - `sargen gen:util <util-name>` - Generate utility services for your project
@@ -265,12 +324,15 @@ test-project/
 - Dependencies: `ioredis`
 - Environment variables: `REDIS_HOST`, `REDIS_PORT`
 - Default configuration: host `localhost`, port `6379`
-- Docker support: Creates `__redisConfig` directory with `docker-compose.yml`
-- Spins up Redis container when Redis is not installed locally
+- Docker support: Creates centralized Docker Compose configuration in `docker/` directory
+- **Usage**: `sargen gen:util redis --docker` → `docker-compose -f docker/docker-compose.yml up -d`
 - **Note:** `--docker` option provides environment-based utility configuration for easy setup
 
 #### Middleware and Utility Examples:
 ```bash
+# Generate validation middleware
+sargen gen:middleware validator
+
 # Generate authentication middleware
 sargen gen:middleware auth
 
@@ -289,8 +351,42 @@ sargen gen:util notification
 # Generate Redis utility service
 sargen gen:util redis
 
-# Generate Redis utility with Docker configuration (spins up Redis container when not installed locally)
+# Generate Redis utility with Docker configuration
 sargen gen:util redis --docker
+
+# Start all Docker services (monitoring, redis, database)
+docker-compose -f docker/docker-compose.yml up -d
+```
+
+## Docker Integration
+
+SargenJS provides seamless Docker integration for development services:
+
+### Centralized Docker Structure
+All Docker services are managed through a single `docker/` directory:
+```
+docker/
+├── docker-compose.yml          # Main Docker Compose file
+├── data/                       # Data persistence directories
+└── services/                   # Service-specific configurations
+    ├── monitoring/             # Grafana, Prometheus, Loki configs
+    └── redis/                  # Redis configuration
+```
+
+### Available Docker Services
+- **Database**: `sargen gen:db --docker --adapter mysql|postgres`
+- **Monitoring**: `sargen gen:middleware monitor`
+- **Redis**: `sargen gen:util redis --docker`
+
+### Quick Start
+```bash
+# Setup all services with Docker
+sargen gen:db --docker
+sargen gen:middleware monitor
+sargen gen:util redis --docker
+
+# Start all services
+docker-compose -f docker/docker-compose.yml up -d
 ```
 
 ### Git Repository Setup
@@ -509,16 +605,6 @@ ALLOWED_ORIGINS=["http://localhost:3000","http://localhost:3001"]
 ```
 ALLOWED_ORIGINS=["https://yourdomain.com","https://www.yourdomain.com"]
 ```
-
-### CORS Features:
-- ✅ **Dynamic origin validation** based on environment variables
-- ✅ **IP and domain support** - Allow both IP addresses and domains
-- ✅ **JSON array format** - Simple and flexible configuration
-- ✅ **Environment-specific defaults** (permissive in dev, restrictive in prod)
-- ✅ **Security-first approach** - Requires origin validation in production/test
-- ✅ **Credentials support** for authenticated requests
-- ✅ **Standard HTTP methods** (GET, POST, PUT, DELETE, PATCH, OPTIONS)
-- ✅ **Common headers** (Content-Type, Authorization, X-Requested-With)
 
 ### Security Best Practices:
 1. **Never use `*` in production** - Always specify exact domains
