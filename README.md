@@ -6,6 +6,7 @@
 
 🚀 **SargenJS** - A beginner-friendly CLI that builds a ready-to-use Express.js project. Just run the command to get routes, configs, and scripts so you can focus on writing features, not boilerplate & base configurations.
 
+---
 > **📝 Important Note:** Everything SargenJS generates is default compatible and follows CommonJS module structure. For ESModule support, developers need to manually transfer/migrate files after generation.
 
 ## Key Features
@@ -68,8 +69,15 @@ sargen setup
 # Database with Docker
 sargen gen:db --docker
 
-# Generate module with CRUD
+# Generate module with CRUD (Along with model attributes)
 sargen gen:module users --crud --model-attributes name:string,email:string
+
+# Supported Data Types:
+# - Basic: string, number, integer, boolean, float, date
+# - Foreign Keys: ref(modelName) - requires quoting for shell compatibility
+# - Enums: enum(value1|value2|...) - up to 10 values, requires quoting
+# Example with foreign key and enum:
+sargen gen:module orders --crud --model-attributes "order_number:integer,product_id:ref(products),status:enum(pending|completed|cancelled)"
 
 # Add middleware
 sargen gen:middleware auth
@@ -86,6 +94,7 @@ sargen init my-api
 cd my-api
 sargen gen:db --docker
 sargen gen:module products --crud --model-attributes title:string,price:number
+sargen gen:module orders --crud --model-attributes "product_id:ref(products),quantity:integer"
 sargen gen:middleware auth
 sargen gen:git
 ```

@@ -14,12 +14,12 @@
     "prepublishOnly": "npm test"
   },
   "keywords": [
-    "express",
-    "cli",
-    "boilerplate",
-    "generator",
     "sargen",
-    "sargenjs"
+    "sargenjs",
+    "generator",
+    "express",
+    "boilerplate",
+    "cli"
   ],
   "author": "Tejas Soni <tejusoniop@gmail.com>",
   "license": "ISC",
