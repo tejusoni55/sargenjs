@@ -4,7 +4,7 @@
   "description": "A powerful CLI tool for generating Express.js project boilerplates with middleware, utilities, and database setup",
   "main": "./lib/index.js",
   "bin": {
-    "sargen": "./bin/index.js"
+    "sargen": "bin/index.js"
   },
   "type": "module",
   "scripts": {
@@ -22,7 +22,7 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tejusoni55/sargenjs.git"
+    "url": "git+https://github.com/tejusoni55/sargenjs.git"
   },
   "homepage": "https://sargenjs-docs.vercel.app",
   "bugs": {
@@ -46,4 +46,4 @@
     "lodash": "^4.17.21"
   },
   "devDependencies": {}
-} 
+}
