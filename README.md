@@ -63,10 +63,10 @@ Your app will be available at: http://localhost:8000
 
 ### Setup & Configuration
 ```bash
-# Setup existing project
+# Setup "Sargen" into existing project
 sargen setup
 
-# Database with Docker
+# Database with Docker (Default MySQL & Sequelize)
 sargen gen:db --docker
 
 # Generate module with CRUD (Along with model attributes)
