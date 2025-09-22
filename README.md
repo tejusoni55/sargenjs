@@ -79,9 +79,19 @@ sargen gen:module users --crud --model-attributes name:string,email:string
 # Example with foreign key and enum:
 sargen gen:module orders --crud --model-attributes "order_number:integer,product_id:ref(products),status:enum(pending|completed|cancelled)"
 
-# Add middleware
+# Add middlewares
 sargen gen:middleware auth
+sargen gen:middleware acl
 sargen gen:middleware validator
+
+# Add utils
+sargen gen:util smtp
+sargen gen:util notifications
+sargen gen:util redis
+
+# If redis is not locally installed (Docker setup)
+sargen gen:util redis --docker
+
 
 # Setup Git repository
 sargen gen:git
@@ -99,7 +109,7 @@ sargen gen:middleware auth
 sargen gen:git
 ```
 
-**📖 [View All Commands](https://sargenjs-docs.vercel.app/commands)** - Complete command reference with examples
+**📖 [View All Commands](https://sargenjs-docs.vercel.app/commands)** - Complete command reference with setup examples
 
 ## License
 
