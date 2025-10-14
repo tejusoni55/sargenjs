@@ -23,6 +23,10 @@ Thumbs.db
 
 # Git
 .git/
+.github/*
+
+# Scripts
+scripts/*
 
 # Development scripts
 .eslintrc*
