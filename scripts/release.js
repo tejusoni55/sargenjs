@@ -25,7 +25,7 @@ try {
   runInherit('git fetch --tags');
 
   // create version commit & tag using npm
-  const msg = `new ${type} version(release): %s`;
+  const msg = `Release: New ${type} version: %s`;
   runInherit(`npm version ${type} -m "${msg}"`);
 
   // read version from package.json
