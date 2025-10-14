@@ -1,6 +1,6 @@
 {
   "name": "sargenjs",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A powerful CLI tool for generating Express.js project boilerplates with middleware, utilities, and database setup",
   "main": "./lib/index.js",
   "bin": {
