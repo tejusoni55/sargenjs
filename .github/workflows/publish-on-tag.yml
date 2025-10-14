@@ -1,0 +1,51 @@
+name: Publish package on tag
+
+# Only run on created tags like v1.2.3
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # quick alternative (run binary file directly)
+      - name: Quick smoke-check (run local bin)
+        run: |
+          PKG_VERSION=$(node -p "require('./package.json').version")
+          CLI_VERSION=$(node ./bin/index.js -V 2>&1 | tr -d '[:space:]' | sed -E 's/^v//; s/[^0-9.].*$//')
+          [ "$CLI_VERSION" = "$PKG_VERSION" ] || (echo "Mismatch $CLI_VERSION != $PKG_VERSION" && exit 1)
+
+      - name: Publish to npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          # check that package version matches tag (safety)
+          TAG=${GITHUB_REF#refs/tags/}
+          PKG_VERSION=$(node -p "require('./package.json').version")
+          echo "Tag: $TAG"
+          echo "Package.json version: $PKG_VERSION"
+          if [ "$TAG" != "v$PKG_VERSION" ]; then
+            echo "Tag and package.json version mismatch — aborting publish."
+            exit 1
+          fi
+          npm publish --access public

@@ -1,5 +1,5 @@
 {
-  "dependencies": ["express", "dotenv", "body-parser", "helmet", "cors"],
+  "dependencies": ["express", "dotenv", "helmet", "cors"],
   "devDependencies": ["cross-env"],
   "initialDirsFiles": {
     "layered": [

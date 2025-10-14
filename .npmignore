@@ -23,7 +23,6 @@ Thumbs.db
 
 # Git
 .git/
-.gitignore
 
 # Development scripts
 .eslintrc*
