@@ -1,7 +1,7 @@
 # SargenJS
 
 <div align="center" >
-  <img src="https://raw.githubusercontent.com/tejusoni55/sargenjs-assets/master/logo/sargenjs-logo.png" alt="SargenJS Logo" style="padding: 10px 0px">
+  <img src="https://raw.githubusercontent.com/tejusoni55/sargenjs/master/logo/sargenjs-logo.png" alt="SargenJS Logo" style="padding: 10px 0px">
 </div>
 
 🚀 **SargenJS** - A beginner-friendly CLI that builds a ready-to-use Express.js project. Just run the command to get routes, configs, and scripts so you can focus on writing features, not boilerplate & base configurations.
