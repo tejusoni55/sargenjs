@@ -19,7 +19,7 @@ rather than setting up infrastructure, security, and boilerplate code.
 - **🔧 Module Generation** - Auto-generate CRUD APIs with controllers, routes, services, and models
 - **🔒 Security Middlewares** - JWT authentication, ACL, validation, and rate limiting
 - **📊 Monitoring Stack** - Prometheus, Grafana, and Loki with Docker integration
-- **⚡ Utility Services** - Redis, SMTP email, and push notifications
+- **⚡ Utility Services** - Redis, SMTP email, push notifications, and file upload (local, AWS S3, Google Cloud Storage)
 - **📝 Git Integration** - Automatic GitHub repository setup with GitHub CLI
 - **🐳 Docker Support** - Centralized Docker Compose for all services
 
@@ -88,6 +88,9 @@ sargen gen:middleware validator
 sargen gen:util smtp
 sargen gen:util notifications
 sargen gen:util redis
+sargen gen:util fileupload              # Local storage
+sargen gen:util fileupload --cloud aws  # AWS S3
+sargen gen:util fileupload --cloud gcp  # Google Cloud Storage
 
 # If redis is not locally installed (Docker setup)
 sargen gen:util redis --docker
